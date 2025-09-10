@@ -38,8 +38,12 @@ void ABaseEnemy::ReceiveHitDamage(const FHitDamageInfo& Info)
 {
 	if (HitBloodEffect)
 	{
-		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitBloodEffect,  Info.HitLocation, FRotator(0.f), FVector(1), true);
+		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitBloodEffect, Info.HitLocation, FRotator(0.f), FVector(1), true);
 	}
+
+	if (!HealthComponent)
+		return;
+
 	if (UBodyPhysicalMaterial* PhysMat = Cast<UBodyPhysicalMaterial>(Info.PhysMat))
 	{
 		float TotalDamage = Info.BaseDamage * PhysMat->DamageModifier.DamageThresholdMultiplier;

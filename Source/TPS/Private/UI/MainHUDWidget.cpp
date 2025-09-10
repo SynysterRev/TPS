@@ -29,15 +29,20 @@ void UMainHUDWidget::UpdateMaxAmmo()
 
 void UMainHUDWidget::InitializeWeaponUI(ATPSCharacter* InCharacter)
 {
-	if (InCharacter->GetCurrentWeapon() == nullptr)
+	if (!InCharacter)
 		return;
 
-	InCharacter->GetCurrentWeapon()->OnAmmoChanged.AddDynamic(this, &UMainHUDWidget::UpdateAmmoDisplay);
+
+	ATPSBaseWeapon* Weapon = InCharacter->GetCurrentWeapon();
+
+	if (!Weapon)
+		return;
+
+	Weapon->OnAmmoChanged.AddDynamic(this, &UMainHUDWidget::UpdateAmmoDisplay);
 	InCharacter->OnChangeWeapon.AddDynamic(this, &UMainHUDWidget::UpdateAmmoDisplay);
 	InCharacter->OnAim.AddDynamic(this, &UMainHUDWidget::EnableCrosshair);
 	InCharacter->OnMoveWhenAiming.AddDynamic(this, &UMainHUDWidget::UpdateCrosshair);
-	UpdateAmmoDisplay(InCharacter->GetCurrentWeapon()->GetAmmoInMag(),
-	                  InCharacter->GetCurrentWeapon()->GetTotalAmmoReserve());
+	UpdateAmmoDisplay(Weapon->GetAmmoInMag(), Weapon->GetTotalAmmoReserve());
 
 	if (CrossHairCanvas)
 	{
